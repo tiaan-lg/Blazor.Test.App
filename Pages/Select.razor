@@ -1,0 +1,131 @@
+﻿@page "/select"
+@using System.Diagnostics
+
+<MudSlider T="int"
+           Min="0"
+           Max="10000"
+           Step="10"
+           Value="_selectItems"
+           ValueChanged="@SetSelectItems">
+    Items @_selectItems
+</MudSlider>
+
+<MudPaper Class="d-flex flex-wrap" Elevation="0" Square="true" Style="gap:1rem;">
+    <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="Open">Open</MudButton>
+    <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="@(() => {_timings.Clear();})">Reset</MudButton>
+    <MudSwitch @bind-Checked="@_closeMenu" Label="Close Menu" Color="Color.Primary"/>
+</MudPaper>
+
+<MudSelect @ref="_selectList"
+           T="int"
+           Class="mt-2"
+           Label="Select List"
+           AnchorOrigin="Origin.BottomCenter"
+           OnOpen="@OnOpen">
+    @foreach (var item in SelectItems)
+    {
+        <MudSelectItem Value="item" />
+    }
+</MudSelect>
+
+@if (_timings.Any())
+{
+    <MudPaper Class="mt-2 d-flex align-center" Square="true" Elevation="0" Style="gap: 1rem;">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Current</MudText>
+                <MudText Typo="Typo.h6">@($"{_timings.LastOrDefault()?.Milliseconds:F2} ms")</MudText>
+            </MudCardContent>
+        </MudCard>
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Avg</MudText>
+                <MudText Typo="Typo.h6">@($"{_timings.Average(x => x.Milliseconds):F2} ms") </MudText>
+            </MudCardContent>
+        </MudCard>
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Min</MudText>
+                <MudText Typo="Typo.h6">@($"{_timings.Min(x => x.Milliseconds):F2} ms")</MudText>
+            </MudCardContent>
+        </MudCard>
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Max</MudText>
+                <MudText Typo="Typo.h6">@($"{_timings.Max(x => x.Milliseconds):F2} ms")</MudText>
+            </MudCardContent>
+        </MudCard>
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Count</MudText>
+                <MudText Typo="Typo.h6">@_timings.Count</MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudPaper>
+}
+
+<MudTable Class="mt-2" Items="@_timings" Dense="true" Hover="true" Bordered="true" Square="true" Elevation="1">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Timings</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Items</MudTh>
+        <MudTh>Time</MudTh>
+        <MudTh>Time Stamp</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="@nameof(Timing.Amount)">@context.Amount</MudTd>
+        <MudTd DataLabel="@nameof(Timing.Amount)">@context.Milliseconds</MudTd>
+        <MudTd DataLabel="@nameof(Timing.TimeStamp)">@context.TimeStamp</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+    private static int _selectItems = 1000;
+    private bool _closeMenu = false;
+    private List<int> SelectItems { get; set; } = Enumerable.Range(0, _selectItems).ToList();
+    private MudSelect<int> _selectList = new();
+
+    private readonly Stopwatch _sw = new();
+    private readonly List<Timing> _timings = new();
+
+    private void SetSelectItems(int amount)
+    {
+        _selectItems = amount;
+        SelectItems = Enumerable.Range(0, amount).ToList();
+    }
+
+    private async Task Open()
+    {
+        _sw.Restart();
+        await _selectList.OpenMenu();
+    }
+
+    private async Task OnOpen()
+    {
+        _sw.Stop();
+        _timings.Add(new Timing(_sw.ElapsedMilliseconds, _selectItems));
+        if (_closeMenu)
+        {
+            await InvokeAsync(() => _selectList.CloseMenu(false));
+        }
+    }
+
+    private class Timing
+    {
+        public Timing(long milliseconds, int amount)
+        {
+            TimeStamp = DateTime.Now;
+            Milliseconds = milliseconds;
+            Amount = amount;
+        }
+
+        public long Milliseconds { get; set; }
+        public int Amount { get; set; }
+        public DateTime TimeStamp { get; set; }
+    }
+}
