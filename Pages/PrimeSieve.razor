@@ -1,0 +1,96 @@
+﻿@page "/primes"
+@using System.Diagnostics
+@using MyMudBlazorApplication.Services
+
+<MudAlert Class="mb-4" Severity="Severity.Normal" NoIcon="true">
+    <MudText Typo="Typo.h5">@Heading</MudText>
+</MudAlert>
+
+<div class="d-flex flex-auto align-center justify-start" style="gap: 1rem;">
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               Size="Size.Large"
+               Disabled="@_processing"
+               OnClick="RunSieve">
+        @if (_processing)
+        {
+            <MudText>Busy...</MudText>
+        }
+        else
+        {
+            <MudText>Run</MudText>
+        }
+    </MudButton>
+
+    <MudNumericField T="long"
+                     Class="flex-grow-0"
+                     Variant="Variant.Outlined"
+                     Label="Sieve Size"
+                     Immediate="false"
+                     Format="N0"
+                     Min="10"
+                     Step="_step"
+                     Value="_size"
+                     ValueChanged="@(CalculateStep)" />
+</div>
+
+@if (_ps != null && !_processing)
+{
+    <MudCard Class="mt-3" Outlined="true">
+        <MudCardContent>
+            <MudText Typo="Typo.button">Results</MudText>
+            <MudText Typo="Typo.h6">@($"{_sw.ElapsedMilliseconds} ms")</MudText>
+            <MudText Typo="Typo.body2">
+                <MudText Inline="true" Typo="Typo.subtitle2">Sieve Size:</MudText>
+                @($"{_size:N0}")
+            </MudText>
+            <MudText Typo="Typo.body2">
+                <MudText Inline="true" Typo="Typo.subtitle2">Primes:</MudText>
+                @_ps.GetPrimeCount()
+            </MudText>
+        </MudCardContent>
+    </MudCard>
+}
+
+@code {
+    private string Heading = "Prime Sieve";
+
+    private static readonly Stopwatch _sw = new();
+
+    private bool _processing = false;
+    private long _size = 1000000;
+    private long _step = 9000000;
+    
+    private PrimeSieveBoolArray? _ps;
+
+    private async Task RunSieve()
+    {
+        await Loading(true);
+        _ps = new PrimeSieveBoolArray(_size);
+        _sw.Restart();
+        _ps.Run();
+        _sw.Stop();
+        await Loading(false);
+    }
+
+    private async Task Loading(bool status)
+    {
+        _processing = status;
+        await Task.Delay(100);
+    }
+
+    private void CalculateStep(long value)
+    {
+        if (value < _size)
+        {
+            _size /= 10;
+            _step = _size - (_size / 10);
+        }
+
+        if (value >= _size)
+        {
+            _size = value;
+            _step = (_size - (_size / 10)) * 10;
+        }
+    }
+}

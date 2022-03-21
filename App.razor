@@ -1,9 +1,5 @@
-@using Microsoft.AspNetCore.Components.WebAssembly.Services
-@using System.Reflection
-@inject LazyAssemblyLoader _assemblyLoader
-@inject ILogger<App> _logger
 
-<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="@lazyLoadedAssemblies"  OnNavigateAsync="@OnNavigateAsync">
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
     </Found>
@@ -15,25 +11,3 @@
     </NotFound>
 </Router>
 
-@code {
-    private List<Assembly> lazyLoadedAssemblies = new();
-
-    private async Task OnNavigateAsync(NavigationContext args)
-    {
-        try
-        {
-            if (args.Path == "{PATH}")
-            {
-                var assemblies = await _assemblyLoader.LoadAssembliesAsync(new[]
-                {
-                    "Microsoft.AspNetCore.Authorization.dll",
-                });
-                lazyLoadedAssemblies.AddRange(assemblies);
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Error: {Message}", ex.Message);
-        }
-    }
-}

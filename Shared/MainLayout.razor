@@ -1,5 +1,4 @@
-﻿@using MudBlazor.Utilities
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 <MudThemeProvider @bind-IsDarkMode="_darkMode" />
 <MudDialogProvider />
@@ -13,13 +12,13 @@
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
         <MudDrawerHeader LinkToIndex="true">
-            <MudText Typo="Typo.h6">Demo</MudText>
+            <MudText Typo="Typo.h6">Blazor Tests</MudText>
         </MudDrawerHeader>
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
-        <MudContainer Class="pa-2" MaxWidth="MaxWidth.Large">
-                @Body
+        <MudContainer Class="pa-3" MaxWidth="MaxWidth.Large">
+            @Body
         </MudContainer>
     </MudMainContent>
 </MudLayout>
@@ -28,7 +27,6 @@
     private bool _darkMode = false;
     private bool _drawerOpen = false;
     private string _modeSwitchIcon = Icons.Material.Filled.LightMode;
-    
 
     void DrawerToggle()
     {
