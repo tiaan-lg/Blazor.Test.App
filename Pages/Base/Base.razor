@@ -1,0 +1,25 @@
+﻿
+@if (ChildContent != null)
+{
+    <MudExpansionPanels Square="true" Dense="false" DisableGutters="false">
+        <MudExpansionPanel Text="@Heading" @bind-IsExpanded="IsExpanded">
+            <div class="pt-2">
+                @ChildContent
+            </div>
+        </MudExpansionPanel>
+    </MudExpansionPanels>
+}
+
+@code {
+    [Parameter]
+    public string Heading { get; set; } = "";
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public bool IsExpanded { get; set; } = true;
+
+    [Parameter]
+    public EventCallback<bool> IsExpandedChanged { get; set; }
+}

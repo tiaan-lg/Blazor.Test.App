@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<BlazorLinkOnBuild Condition="'$(Configuration)'!='Release'">false</BlazorLinkOnBuild>
 		<RunAOTCompilation>false</RunAOTCompilation>
 	</PropertyGroup>
 	<ItemGroup>
@@ -13,5 +11,9 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Watch Include="..\ClientProject\**\*.razor" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove=".gitattributes" />
+	  <None Remove=".gitignore" />
 	</ItemGroup>
 </Project>

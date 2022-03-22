@@ -1,6 +1,9 @@
-﻿<MudNavMenu>
-    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-    <MudNavLink Href="/select" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.SelectAll">Select Tests</MudNavLink>
-    <MudNavLink Href="/ack" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Speed">Ackerman</MudNavLink>
-    <MudNavLink Href="/primes" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Calculate">Primes</MudNavLink>
+﻿<MudNavMenu Bordered="true" Color="Color.Primary">
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Sharp.Home">Home</MudNavLink>
+    <MudNavLink Href="/select" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Sharp.SelectAll">Select Tests</MudNavLink>
+    <MudNavLink Href="/ack" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Sharp.Speed">Ackerman</MudNavLink>
+    <MudNavGroup Title="Primes" Expanded="false" Icon="@Icons.Material.Sharp.Calculate">
+        <MudNavLink Href="/primesieve" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Analytics">Sieve</MudNavLink>
+        <MudNavLink Href="/primebench" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Watch">Benchmark</MudNavLink>
+    </MudNavGroup>
 </MudNavMenu>

@@ -1,10 +1,8 @@
-﻿@page "/primes"
+﻿@page "/primesieve"
 @using System.Diagnostics
 @using MyMudBlazorApplication.Services
 
-<MudAlert Class="mb-4" Severity="Severity.Normal" NoIcon="true">
-    <MudText Typo="Typo.h5">@Heading</MudText>
-</MudAlert>
+<Base Heading="Prime Sieve">
 
 <div class="d-flex flex-auto align-center justify-start" style="gap: 1rem;">
     <MudButton Variant="Variant.Filled"
@@ -12,14 +10,14 @@
                Size="Size.Large"
                Disabled="@_processing"
                OnClick="RunSieve">
-        @if (_processing)
-        {
+            @if (_processing)
+            {
             <MudText>Busy...</MudText>
-        }
-        else
-        {
+            }
+            else
+            {
             <MudText>Run</MudText>
-        }
+            }
     </MudButton>
 
     <MudNumericField T="long"
@@ -34,34 +32,34 @@
                      ValueChanged="@(CalculateStep)" />
 </div>
 
-@if (_ps != null && !_processing)
-{
+    @if (_ps != null && !_processing)
+    {
     <MudCard Class="mt-3" Outlined="true">
         <MudCardContent>
             <MudText Typo="Typo.button">Results</MudText>
             <MudText Typo="Typo.h6">@($"{_sw.ElapsedMilliseconds} ms")</MudText>
             <MudText Typo="Typo.body2">
                 <MudText Inline="true" Typo="Typo.subtitle2">Sieve Size:</MudText>
-                @($"{_size:N0}")
+                    @($"{_size:N0}")
             </MudText>
             <MudText Typo="Typo.body2">
                 <MudText Inline="true" Typo="Typo.subtitle2">Primes:</MudText>
-                @_ps.GetPrimeCount()
+                    @_ps.GetPrimeCount()
             </MudText>
         </MudCardContent>
     </MudCard>
-}
+    }
+
+</Base>
 
 @code {
-    private string Heading = "Prime Sieve";
-
     private static readonly Stopwatch _sw = new();
 
     private bool _processing = false;
     private long _size = 1000000;
     private long _step = 9000000;
-    
-    private PrimeSieveBoolArray? _ps;
+
+    private PrimeSieveBoolArray _ps;
 
     private async Task RunSieve()
     {

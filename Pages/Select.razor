@@ -1,6 +1,8 @@
 ﻿@page "/select"
 @using System.Diagnostics
 
+<Base Heading="Select Lists">
+
 <MudSlider T="int"
            Min="0"
            Max="10000"
@@ -13,7 +15,7 @@
 <MudPaper Class="d-flex flex-wrap" Elevation="0" Square="true" Style="gap:1rem;">
     <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="Open">Open</MudButton>
     <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="@(() => {_timings.Clear();})">Reset</MudButton>
-    <MudSwitch @bind-Checked="@_closeMenu" Label="Close Menu" Color="Color.Primary"/>
+    <MudSwitch @bind-Checked="@_closeMenu" Label="Close Menu" Color="Color.Primary" />
 </MudPaper>
 
 <MudSelect @ref="_selectList"
@@ -22,14 +24,14 @@
            Label="Select List"
            AnchorOrigin="Origin.BottomCenter"
            OnOpen="@OnOpen">
-    @foreach (var item in SelectItems)
-    {
+        @foreach (var item in SelectItems)
+        {
         <MudSelectItem Value="item" />
-    }
+        }
 </MudSelect>
 
-@if (_timings.Any())
-{
+    @if (_timings.Any())
+    {
     <MudPaper Class="mt-2 d-flex align-center" Square="true" Elevation="0" Style="gap: 1rem;">
         <MudCard Outlined="true">
             <MudCardContent>
@@ -62,28 +64,29 @@
             </MudCardContent>
         </MudCard>
     </MudPaper>
-}
+    }
 
-<MudTable Class="mt-2" Items="@_timings" Dense="true" Hover="true" Bordered="true" Square="true" Elevation="1">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">Timings</MudText>
-        <MudSpacer />
-    </ToolBarContent>
-    <HeaderContent>
-        <MudTh>Items</MudTh>
-        <MudTh>Time</MudTh>
-        <MudTh>Time Stamp</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="@nameof(Timing.Amount)">@context.Amount</MudTd>
-        <MudTd DataLabel="@nameof(Timing.Amount)">@context.Milliseconds</MudTd>
-        <MudTd DataLabel="@nameof(Timing.TimeStamp)">@context.TimeStamp</MudTd>
-    </RowTemplate>
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
-</MudTable>
+    <MudTable Class="mt-2" Items="@_timings" Dense="true" Hover="true" Bordered="true" Square="true" Elevation="1">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Timings</MudText>
+            <MudSpacer />
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Items</MudTh>
+            <MudTh>Time</MudTh>
+            <MudTh>Time Stamp</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="@nameof(Timing.Amount)">@context.Amount</MudTd>
+            <MudTd DataLabel="@nameof(Timing.Amount)">@context.Milliseconds</MudTd>
+            <MudTd DataLabel="@nameof(Timing.TimeStamp)">@context.TimeStamp</MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
 
+</Base>
 @code {
     private static int _selectItems = 1000;
     private bool _closeMenu = false;

@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider @bind-IsDarkMode="_darkMode" />
+<MudThemeProvider Theme="@_theme"/>
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -8,7 +8,9 @@
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle" />
         <MudSpacer />
-        <MudIconButton Icon="@_modeSwitchIcon" Color="Color.Inherit" Edge="Edge.End" OnClick="@DarkModeToggle" />
+        @*<MudToggleIconButton @bind-Toggled="@_darkMode"
+                             Icon="@Icons.Material.Filled.DarkMode" Color="@Color.Inherit" Title="Dark Mode"
+                             ToggledIcon="@Icons.Material.Filled.LightMode" ToggledColor="@Color.Inherit" ToggledTitle="Light Mode"/>*@
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
         <MudDrawerHeader LinkToIndex="true">
@@ -17,25 +19,29 @@
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
-        <MudContainer Class="pa-3" MaxWidth="MaxWidth.Large">
+        <MudContainer Class="pa-2" MaxWidth="MaxWidth.Large">
             @Body
         </MudContainer>
     </MudMainContent>
 </MudLayout>
 
 @code {
-    private bool _darkMode = false;
-    private bool _drawerOpen = false;
-    private string _modeSwitchIcon = Icons.Material.Filled.LightMode;
+    private bool _drawerOpen;
+
+    MudTheme _theme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Primary = Colors.Teal.Accent4,
+            Secondary = Colors.Cyan.Default,
+            Tertiary = Colors.Teal.Lighten4,
+            AppbarBackground = Colors.Teal.Default,
+            Background = Colors.Grey.Lighten5
+        }
+    };
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
-    }
-
-    void DarkModeToggle()
-    {
-        _darkMode = !_darkMode;
-        _modeSwitchIcon = _darkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode;
     }
 }

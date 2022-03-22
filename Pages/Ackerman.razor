@@ -1,10 +1,14 @@
 ﻿@page "/ack"
 @using System.Diagnostics
 
-<MudNumericField @bind-Value="_m" Label="M" Variant="Variant.Text" Min="0" Max="5" />
-<MudNumericField @bind-Value="_n" Label="N" Variant="Variant.Text" Min="0" Max="5" />
+<Base Heading="Ackermann">
+    <MudNumericField @bind-Value="_m" Label="M" Variant="Variant.Text" Min="0" Max="5" />
+    <MudNumericField @bind-Value="_n" Label="N" Variant="Variant.Text" Min="0" Max="5" />
 
-<MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="@Run">Run</MudButton>
+    <MudButton Variant="Variant.Outlined" Color="Color.Default" OnClick="@Run">Run</MudButton>
+
+</Base>
+
 
 @code {
     private long _m = 1;

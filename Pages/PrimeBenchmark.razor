@@ -1,0 +1,102 @@
+﻿@page "/primebench"
+@using System.Diagnostics
+@using MyMudBlazorApplication.Services
+
+<Base Heading="Prime Benchmark">
+<div class="d-flex flex-auto align-center justify-start" style="gap: 1rem;">
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               Size="Size.Large"
+               OnClick="Run">
+        <MudText>Run</MudText>
+    </MudButton>
+
+    <MudNumericField T="int"
+                     Class="flex-grow-0"
+                     Variant="Variant.Outlined"
+                     Label="Run Time"
+                     Immediate="false"
+                     Format="N0"
+                     Min="10"
+                     @bind-Value="_runTime" />
+
+    <MudNumericField T="long"
+                     Class="flex-grow-0"
+                     Variant="Variant.Outlined"
+                     Label="Sieve Size"
+                     Immediate="false"
+                     Format="N0"
+                     Min="10"
+                     @bind-Value="_size" />
+</div>
+<MudTable Class="mt-2" Items="@_results" Dense="true" Hover="true" Bordered="true" Square="true" Elevation="1">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Results</MudText>
+        <MudSpacer />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>@nameof(BenchResult.Passes)</MudTh>
+        <MudTh>@nameof(BenchResult.AvgTime)</MudTh>
+        <MudTh>@nameof(BenchResult.Time)</MudTh>
+        <MudTh>@nameof(BenchResult.Size)</MudTh>
+        <MudTh>@nameof(BenchResult.PrimeCount)</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="@nameof(BenchResult.Passes)">@context.Passes</MudTd>
+        <MudTd DataLabel="@nameof(BenchResult.AvgTime)">@context.AvgTime.ToString("F0") ms</MudTd>
+        <MudTd DataLabel="@nameof(BenchResult.Time)">@context.Time ms</MudTd>
+        <MudTd DataLabel="@nameof(BenchResult.Size)">@context.Size</MudTd>
+        <MudTd DataLabel="@nameof(BenchResult.PrimeCount)">@context.PrimeCount</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+</Base>
+@code {
+
+    private int _runTime = 5;
+    private long _size = 1000000;
+
+    private readonly List<BenchResult> _results = new();
+
+    private void Run()
+    {
+        var passes = 0;
+        PrimeSieveBoolArray sieve = null;
+
+        var start = DateTime.UtcNow;
+        while ((DateTime.UtcNow - start).TotalMilliseconds < (_runTime * 1000))
+        {
+            sieve = new PrimeSieveBoolArray(_size);
+            sieve.Run();
+            passes++;
+        }
+
+        var timeTaken = DateTime.UtcNow - start;
+
+        _results.Add(new BenchResult(passes, timeTaken.TotalMilliseconds, _size, sieve?.GetPrimeCount() ?? 0));
+    }
+
+    public class BenchResult
+    {
+        public BenchResult(int passes, double time, long size, long primeCount)
+        {
+            Passes = passes;
+            Time = time;
+            Size = size;
+            PrimeCount = primeCount;
+        }
+
+        public int Passes { get; set; }
+
+        public double Time { get; set; }
+
+        public long Size { get; set; }
+
+        public long PrimeCount { get; set; }
+
+        public double AvgTime => Time / Passes;
+    }
+}
