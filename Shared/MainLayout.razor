@@ -1,22 +1,30 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="@_theme"/>
+<MudThemeProvider Theme="@_theme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Elevation="1">
+    <MudAppBar Elevation="0" Dense="true" Fixed="true">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle" />
         <MudSpacer />
         @*<MudToggleIconButton @bind-Toggled="@_darkMode"
-                             Icon="@Icons.Material.Filled.DarkMode" Color="@Color.Inherit" Title="Dark Mode"
-                             ToggledIcon="@Icons.Material.Filled.LightMode" ToggledColor="@Color.Inherit" ToggledTitle="Light Mode"/>*@
+            Icon="@Icons.Material.Filled.DarkMode" Color="@Color.Inherit" Title="Dark Mode"
+            ToggledIcon="@Icons.Material.Filled.LightMode" ToggledColor="@Color.Inherit" ToggledTitle="Light Mode"/>*@
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
-        <MudDrawerHeader LinkToIndex="true">
-            <MudText Typo="Typo.h6">Blazor Tests</MudText>
+    <MudDrawer @bind-Open="_drawerOpen"
+               Elevation="0"
+               ClipMode="DrawerClipMode.Always"
+               Variant="DrawerVariant.Mini"
+               Breakpoint="Breakpoint.Md"
+               PreserveOpenState="true">
+        <MudDrawerHeader Dense="true">
+            @if (_drawerOpen)
+            {
+                <MudText Typo="Typo.h6">Blazor Testing</MudText>
+            }
         </MudDrawerHeader>
-        <NavMenu />
+        <NavMenu/>
     </MudDrawer>
     <MudMainContent>
         <MudContainer Class="pa-2" MaxWidth="MaxWidth.Large">
@@ -26,19 +34,19 @@
 </MudLayout>
 
 @code {
-    private bool _drawerOpen;
+    private bool _drawerOpen = true;
 
     MudTheme _theme = new MudTheme()
-    {
-        Palette = new Palette()
         {
-            Primary = Colors.Teal.Accent4,
-            Secondary = Colors.Cyan.Default,
-            Tertiary = Colors.Teal.Lighten4,
-            AppbarBackground = Colors.Teal.Default,
-            Background = Colors.Grey.Lighten5
-        }
-    };
+            Palette = new Palette()
+            {
+                Primary = Colors.Teal.Accent4,
+                Secondary = Colors.Cyan.Default,
+                Tertiary = Colors.Teal.Lighten4,
+                AppbarBackground = Colors.Teal.Default,
+                Background = Colors.Grey.Lighten4
+            }
+        };
 
     void DrawerToggle()
     {
